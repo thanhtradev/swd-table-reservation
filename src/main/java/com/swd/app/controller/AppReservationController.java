@@ -87,7 +87,7 @@ public class AppReservationController extends BaseController {
         if (reservation == null) {
             throw new BadRequestException("Reservation does not exist");
         }
-        if (Boolean.TRUE.equals(reservationService.isValidStatus(reservationUpdateDto.getStatus()))) {
+        if (Boolean.FALSE.equals(reservationService.isValidStatus(reservationUpdateDto.getStatus()))) {
             throw new BadRequestException("Invalid status");
         }
         reservation.setStatus(EReservationStatus.valueOf(reservationUpdateDto.getStatus()));
