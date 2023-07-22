@@ -34,6 +34,9 @@ public class UserService {
     public void deleteUserById(Long id) {
         userRepository.deleteById(id);
     }
+    public Boolean existByPhoneNumber(String phoneNumber) {
+        return userRepository.existsByPhone(phoneNumber);
+    }
 
     public User addUser(User user) {
         return userRepository.save(user);

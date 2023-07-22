@@ -60,13 +60,16 @@ public class AuthController extends BaseController {
         if (Boolean.TRUE.equals(userService.existsByUsername(registerDto.getUsername()))) {
             throw new BadRequestException("Username is already taken!");
         }
+        if (Boolean.TRUE.equals(userService.existByPhoneNumber(registerDto.getPhoneNumber()))) {
+            throw new BadRequestException("Phone number is already taken!");
+        }
         User user = new User();
         user.setUsername(registerDto.getUsername());
         user.setPassword(encoder.encode(registerDto.getPassword()));
+        user.setPhone(registerDto.getPhoneNumber());
         Role role = roleService.getByName("ROLE_USER");
         user.setRoles(Collections.singleton(role));
         User savedUser = userService.addUser(user);
-
         return makeResponse(true, userMapper.fromEntityToUserDto(savedUser), "Register successful!");
     }
 

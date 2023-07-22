@@ -9,4 +9,6 @@ public class RegisterDto {
     private String username;
     @NotBlank
     private String password;
+    @NotBlank
+    private String phoneNumber;
 }
