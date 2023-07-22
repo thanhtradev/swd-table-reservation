@@ -22,9 +22,10 @@ public class ReservationService {
     }
 
     public Reservation getByUserIdAndTableId(Long userId, Long tableId) {
-        return reservationRepository.findByUserIdAndTableId(userId, tableId);}
+        return reservationRepository.findByUserIdAndTableId(userId, tableId);
+    }
 
-    public List<Reservation> getAll(){
+    public List<Reservation> getAll() {
         return reservationRepository.findAll();
     }
 
@@ -40,9 +41,9 @@ public class ReservationService {
         reservationRepository.deleteById(id);
     }
 
-    public Boolean isValidStatus (String status) {
-        for(EReservationStatus e : EReservationStatus.values()) {
-            if(e.name().equals(status)) {
+    public Boolean isValidStatus(String status) {
+        for (EReservationStatus e : EReservationStatus.values()) {
+            if (e.name().equals(status)) {
                 return true;
             }
         }
@@ -50,10 +51,18 @@ public class ReservationService {
     }
 
     public List<Reservation> getAllAcceptedReservationsInTime(Date startTime, Date endTime) {
-        return reservationRepository.findAllApprovedReservationsInTime( startTime, endTime);
+        return reservationRepository.findAllApprovedReservationsInTime(startTime, endTime);
     }
 
     public List<Reservation> getAllByDate(Date date) {
         return reservationRepository.findAllByDate(date);
+    }
+
+    public void rejectReservation(Reservation reservation) {
+       List<Reservation> reservations = reservationRepository.findAllByStartTimeAndStatusPending(reservation.getStartTime());
+         for (Reservation res : reservations) {
+              res.setStatus(EReservationStatus.REJECTED);
+              reservationRepository.save(res);
+         }
     }
 }

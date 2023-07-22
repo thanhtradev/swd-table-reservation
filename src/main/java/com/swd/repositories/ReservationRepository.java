@@ -19,4 +19,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long>,
     // This is a custom query that finds all reservation has startTime and endTime in the same day as the given date
     @Query("SELECT r FROM Reservation r WHERE DATE(r.startTime) = :date")
     List<Reservation> findAllByDate(@Param("date") Date date);
+
+    @Query("SELECT r FROM Reservation r WHERE r.startTime = ?1 AND r.status = 'PENDING'")
+    List<Reservation> findAllByStartTimeAndStatusPending(Date startTime);
 }

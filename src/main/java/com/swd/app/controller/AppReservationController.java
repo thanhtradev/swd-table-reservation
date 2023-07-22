@@ -80,9 +80,10 @@ public class AppReservationController extends BaseController {
     }
 
     // Update reservation status
+    @Transactional
     @PostMapping("/update")
-    ApiMessageDto<Object> updateReservationStatus(@Valid @RequestBody ReservationUpdateDto reservationUpdateDto) {
-        Reservation reservation = reservationService.getByUserIdAndTableId(reservationUpdateDto.getUserId(), reservationUpdateDto.getTableId());
+    public ApiMessageDto<Object> updateReservationStatus(@Valid @RequestBody ReservationUpdateDto reservationUpdateDto) {
+        Reservation reservation = reservationService.getById(reservationUpdateDto.getReservationId());
         if (reservation == null) {
             throw new BadRequestException("Reservation does not exist");
         }
@@ -91,6 +92,9 @@ public class AppReservationController extends BaseController {
         }
         reservation.setStatus(EReservationStatus.valueOf(reservationUpdateDto.getStatus()));
         Reservation updatedReservation = reservationService.addReservation(reservation);
+        // Find all reservation with status pending and has same start time and end time as updated reservation
+        // If there is any, set status to rejected
+        reservationService.rejectReservation(updatedReservation);
         return makeResponse(true, mapper.fromEntityToReservationDto(updatedReservation), "Reservation updated successfully");
     }
 

@@ -4,7 +4,6 @@ import lombok.Data;
 
 @Data
 public class ReservationUpdateDto {
-    private Long userId;
-    private Long tableId;
+    private Long reservationId;
     private String status;
 }
