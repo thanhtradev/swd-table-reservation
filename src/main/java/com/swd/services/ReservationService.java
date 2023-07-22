@@ -58,11 +58,15 @@ public class ReservationService {
         return reservationRepository.findAllByDate(date);
     }
 
+    public List<Reservation> getAllByDateAndUserId(Date date, Long userId) {
+        return reservationRepository.findAllByDateAndUserId(date, userId);
+    }
+
     public void rejectReservation(Reservation reservation) {
-       List<Reservation> reservations = reservationRepository.findAllByStartTimeAndStatusPending(reservation.getStartTime());
-         for (Reservation res : reservations) {
-              res.setStatus(EReservationStatus.REJECTED);
-              reservationRepository.save(res);
-         }
+        List<Reservation> reservations = reservationRepository.findAllByStartTimeAndStatusPending(reservation.getStartTime());
+        for (Reservation res : reservations) {
+            res.setStatus(EReservationStatus.REJECTED);
+            reservationRepository.save(res);
+        }
     }
 }

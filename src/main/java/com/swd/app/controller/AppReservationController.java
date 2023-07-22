@@ -108,6 +108,23 @@ public class AppReservationController extends BaseController {
         } catch (Exception e) {
             throw new BadRequestException("Invalid date format");
         }
+    }
 
+    // Get all reservations of current user by date
+    @GetMapping("/get-by-date-and-user")
+    ApiMessageDto<Object> getReservationByDateAndUser(@RequestParam String dateStr) {
+        String dateFormat = "dd-MM-yyyy";
+        DateFormat formatter = new SimpleDateFormat(dateFormat);
+        try {
+            Date date = formatter.parse(dateStr);
+            UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            if (userDetails == null) {
+                throw new BadRequestException("User is not logged in");
+            }
+            Long userId = userDetails.getId();
+            return makeResponse(true, mapper.fromEntityToReservationDtoList(reservationService.getAllByDateAndUserId(date, userId)), "Reservation retrieved successfully");
+        } catch (Exception e) {
+            throw new BadRequestException("Invalid date format");
+        }
     }
 }
